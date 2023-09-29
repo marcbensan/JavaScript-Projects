@@ -425,7 +425,7 @@ function getObservationsByLocation(data, options = {}) {
   if (Object.keys(options).length === 0) {
     return results;
   }
-  
+
   const newObj = results.filter((obj) => {
     let locations = obj.location.split(',');
     let latitude = parseFloat(locations[0]);
@@ -496,7 +496,25 @@ function getObservationsByLocation(data, options = {}) {
  * Your function should return an Array of these new URLs:
  ******************************************************************************/
 function getPlaceURLs(data) {
-  // TODO
+  const { results } = data;
+  let newObj = [];
+
+  // grabs every instance of place_ids and puts it in newObj array
+  results.forEach((obj) => {
+    obj.place_ids.forEach((id) => {
+      let inObj = newObj.includes(id);
+
+      if (!inObj) {
+        newObj.push(id);
+      }
+    });
+  });
+
+  //string interpolation to match the place_ids with the url
+  for (let i = 0; i < newObj.length; i++) {
+    newObj[i] = `https://www.inaturalist.org/observations?place_id=${newObj[i]}`;
+  }
+  return newObj;
 }
 
 /*******************************************************************************
@@ -534,7 +552,19 @@ function getPlaceURLs(data) {
  * }
  ******************************************************************************/
 function getSpeciesObservations(data) {
-  // TODO
+  const { results } = data;
+  const newObj = {};
+
+  results.forEach((arr) => {
+    let speciesName = arr.taxon.name;
+
+    if (speciesName in newObj) {
+      newObj[speciesName]++;
+    } else {
+      newObj[speciesName] = 1;
+    }
+  });
+  return newObj;
 }
 
 /**
@@ -552,7 +582,17 @@ function getSpeciesObservations(data) {
  * return the Array of species names.
  */
 function extractSpeciesNames(data) {
-  // TODO
+  const { results } = data;
+  const newObj = [];
+
+  results.forEach((obj) => {
+    let speciesName = obj.species_guess;
+    if (!newObj.includes(speciesName)) {
+      newObj.push(speciesName);
+    }
+  });
+
+  return newObj;
 }
 
 /**
@@ -570,7 +610,20 @@ function extractSpeciesNames(data) {
  */
 
 function extractSpeciesNames2(data) {
-  // TODO
+  const { results } = data;
+  let animalsArray = [];
+  const animalNamesSet = new Set();
+
+  results.forEach((obj) => {
+    let speciesName = obj.species_guess;
+
+    if (!animalNamesSet.has(speciesName)) {
+      animalNamesSet.add(speciesName);
+    }
+  });
+  animalsArray = Array.from(animalNamesSet);
+
+  return animalsArray;
 }
 
 // Our unit test files need to access the functions we defined
