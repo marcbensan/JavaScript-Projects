@@ -330,10 +330,10 @@ function transformObservations(data) {
  *  - return the Array created by the .map() method
  ******************************************************************************/
 function transformObservations2(data) {
-  const {results} = data
-  let mappedArray = results.map(transformObservation)
+  const { results } = data;
+  let mappedArray = results.map(transformObservation);
 
-  return mappedArray
+  return mappedArray;
 }
 
 /*******************************************************************************
@@ -375,7 +375,23 @@ function transformObservations2(data) {
  *  - use the .filter() method to locate items by taxon name, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
  ******************************************************************************/
 function getObservationsByTaxa(data, ...taxaNames) {
-  // TODO
+  const { results } = data;
+  let objArr = [];
+
+  let isUnknown = !['Animalia', 'Insecta', 'Plantae', 'Mammalia', 'Aves'].includes(taxaNames);
+  let validTaxons = taxaNames.filter((taxonName) => taxonName !== isUnknown);
+  let singleUnknown = taxaNames.length === 1 && validTaxons === isUnknown;
+
+  if (singleUnknown) {
+    return objArr;
+  }
+
+  validTaxons.forEach((taxonName) => {
+    const matches = results.filter((obj) => obj.taxon.iconic_taxon_name === taxonName);
+    objArr.push(...matches);
+  });
+
+  return objArr;
 }
 
 /*******************************************************************************
@@ -403,7 +419,35 @@ function getObservationsByTaxa(data, ...taxaNames) {
  * Use the Array .filter() function in your solution.
  ******************************************************************************/
 function getObservationsByLocation(data, options = {}) {
-  // TODO
+  const { results } = data;
+
+  // I used this method to check if the 'options' object has keys in it. If not, then return the results.
+  if (Object.keys(options).length === 0) {
+    return results;
+  }
+  
+  const newObj = results.filter((obj) => {
+    let locations = obj.location.split(',');
+    let latitude = parseFloat(locations[0]);
+    let longitude = parseFloat(locations[1]);
+
+    if (options.lat.min) {
+      let validLatitudeMin = latitude >= options.lat.min && latitude <= options.lat.max;
+      let validLongitudeMax = longitude >= options.lng.min && longitude <= options.lng.max;
+
+      if (validLatitudeMin && validLongitudeMax) {
+        return true;
+      }
+    }
+
+    let matched = latitude === options.lat && longitude === options.lng;
+    if (matched) {
+      return true;
+    }
+    return false;
+  });
+
+  return newObj;
 }
 
 /*******************************************************************************
