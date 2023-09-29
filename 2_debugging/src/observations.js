@@ -8,9 +8,9 @@
  *
  * Please update the following with your information:
  *
- *      Name: <YOUR_NAME>
- *      Student ID: <YOUR_STUDENT_ID>
- *      Date: <SUBMISSION_DATE>
+ *      Name: Denyl Marc Bensan
+ *      Student ID: 171309222
+ *      Date: 09/29/2023
  *
  * Please see all unit tests in the files problem-01.test.js, problem-02.test.js, etc.
  */
@@ -71,8 +71,7 @@
  * See if you can get this test to pass by fixing the bug in the code below.
  ******************************************************************************/
 function getTotalResults(data) {
-  // TODO: fix this code so it gets and returns the `total_results` property from observation data
-  return data;
+  return data.total_results;
 }
 
 /*******************************************************************************
@@ -94,7 +93,15 @@ function getTotalResults(data) {
  * Your function shouldn't return anything, just call console.log()
  ******************************************************************************/
 function speciesCoordinates(data) {
-  // TODO
+  const { results } = data;
+
+  for (let i = 0; i < results.length; i++) {
+    const obj = results[i];
+    const species = obj.species_guess;
+    const loc = obj.location;
+
+    console.log(`"${species}" observed at coordinates (${loc})`);
+  }
 }
 
 /*******************************************************************************
@@ -106,7 +113,13 @@ function speciesCoordinates(data) {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
  ******************************************************************************/
 function speciesCoordinates2(data) {
-  // TODO
+  const { results } = data;
+
+  results.forEach((arr) => {
+    const species = arr.species_guess;
+    const loc = arr.location;
+    console.log(`"${species}" observed at coordinates (${loc})`);
+  });
 }
 
 /*******************************************************************************
@@ -123,7 +136,15 @@ function speciesCoordinates2(data) {
  * See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of
  ******************************************************************************/
 function speciesCoordinates3(data) {
-  // TODO
+  const { results } = data;
+
+  for (const arr of results) {
+    const species = arr.species_guess;
+    const loc = arr.location.split(',');
+    const lat = loc[0];
+    const long = loc[1];
+    console.log(`"${species}" observed at coordinates (${lat}, ${long})`);
+  }
 }
 
 /*******************************************************************************
@@ -164,7 +185,21 @@ function speciesCoordinates3(data) {
  * Your function should return the newly created Array.
  ******************************************************************************/
 function observationsByQualityGrade(data, qualityGrade) {
-  // TODO
+  const { results } = data;
+  let newArr;
+
+  if (qualityGrade === null) {
+    newArr = results.filter((arr) => arr.quality_grade === null);
+  } else {
+    qualityGrade = qualityGrade.toLowerCase();
+    newArr = results.filter((arr) => arr.quality_grade === qualityGrade);
+  }
+
+  if (newArr.length === 0) {
+    throw new Error('This quality grade does not exist');
+  }
+
+  return newArr;
 }
 
 /*******************************************************************************
@@ -187,7 +222,17 @@ function observationsByQualityGrade(data, qualityGrade) {
  * from above (i.e., don't rewrite the same logic again).
  ******************************************************************************/
 function observationsByQualityGrades(data, ...qualityGrades) {
-  // TODO
+  let chosenArr = [];
+
+  if (qualityGrades.length < 1) {
+    throw new Error('Cant have empty quality grades.');
+  }
+
+  for (let i = 0; i < qualityGrades.length; i++) {
+    let arr = observationsByQualityGrade(data, qualityGrades[i]);
+    chosenArr.push(...arr);
+  }
+  return chosenArr;
 }
 
 /*******************************************************************************
@@ -195,8 +240,7 @@ function observationsByQualityGrades(data, ...qualityGrades) {
  *
  * Write a function to transform a result into a new Object format.
  *
- * The `transformObservation(original)` function takes an observation Object that
- * looks like the values in src/data.js, and transforms the data into a new Object
+ * The `transformObservation(original)`.into a new Object
  * that looks like this (see comments on right-hand side with details):
  *
  * {
@@ -211,7 +255,39 @@ function observationsByQualityGrades(data, ...qualityGrades) {
  * }
  ******************************************************************************/
 function transformObservation(original) {
-  // TODO
+  function validate(attribute, functions = null, defaultValue = null) {
+    //this function will take keys from original and checks whether it exists or not
+    if (attribute) {
+      if (functions) {
+        // this will do the paseed function to the parameter if needed
+        return functions(attribute);
+      }
+      return attribute;
+    }
+    return defaultValue; // if there is no existing attribute, return null
+  }
+
+  function addPhotos(photos) {
+    let photoArr = new Array();
+    photos.forEach((photo) => {
+      photoArr.push({ url: photo.url, copyright: photo.attribution });
+    });
+    return photoArr;
+  }
+
+  let newObject = {
+    id: validate(original.id),
+    name: validate(original.species_guess, (name) => name.toLowerCase()),
+    isExtinct: validate(
+      original.conservation_status,
+      (extinct) => extinct.status_name === 'extinct in the wild',
+      false
+    ),
+    images: validate(original.photos, addPhotos, new Array()),
+    observer: validate(original.user.login_exact) + '@inaturalist.com'
+  };
+
+  return newObject;
 }
 
 /*******************************************************************************
@@ -231,7 +307,13 @@ function transformObservation(original) {
  *  - return the new Array containing all the transformed Objects
  ******************************************************************************/
 function transformObservations(data) {
-  // TODO
+  let allArrays = [];
+  const { results } = data;
+
+  results.forEach((arr) => {
+    allArrays.push(transformObservation(arr));
+  });
+  return allArrays;
 }
 
 /*******************************************************************************
@@ -248,7 +330,10 @@ function transformObservations(data) {
  *  - return the Array created by the .map() method
  ******************************************************************************/
 function transformObservations2(data) {
-  // TODO
+  const {results} = data
+  let mappedArray = results.map(transformObservation)
+
+  return mappedArray
 }
 
 /*******************************************************************************
