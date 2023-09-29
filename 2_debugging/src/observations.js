@@ -275,7 +275,7 @@ function transformObservation(original) {
     return photoArr;
   }
 
-  let newObject = {
+  let newObj = {
     id: validate(original.id),
     name: validate(original.species_guess, (name) => name.toLowerCase()),
     isExtinct: validate(
@@ -287,7 +287,7 @@ function transformObservation(original) {
     observer: validate(original.user.login_exact) + '@inaturalist.com'
   };
 
-  return newObject;
+  return newObj;
 }
 
 /*******************************************************************************
@@ -307,13 +307,13 @@ function transformObservation(original) {
  *  - return the new Array containing all the transformed Objects
  ******************************************************************************/
 function transformObservations(data) {
-  let allArrays = [];
+  let allArr = [];
   const { results } = data;
 
   results.forEach((arr) => {
-    allArrays.push(transformObservation(arr));
+    allArr.push(transformObservation(arr));
   });
-  return allArrays;
+  return allArr;
 }
 
 /*******************************************************************************
@@ -331,9 +331,9 @@ function transformObservations(data) {
  ******************************************************************************/
 function transformObservations2(data) {
   const { results } = data;
-  let mappedArray = results.map(transformObservation);
+  let mappedArr = results.map(transformObservation);
 
-  return mappedArray;
+  return mappedArr;
 }
 
 /*******************************************************************************
