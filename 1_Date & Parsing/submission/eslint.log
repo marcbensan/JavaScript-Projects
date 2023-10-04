@@ -1,0 +1,16 @@
+
+> web222-assignment-1@6.0.0 eslint
+> eslint src/**/*.js
+
+
+C:\Users\Marc\Desktop\CPA\WEB\a1\src\solutions.js
+  282:27  warning  Expected '===' and instead saw '=='  eqeqeq
+  284:29  warning  Expected '===' and instead saw '=='  eqeqeq
+  284:55  warning  Expected '===' and instead saw '=='  eqeqeq
+  288:36  warning  Expected '===' and instead saw '=='  eqeqeq
+  288:62  warning  Expected '===' and instead saw '=='  eqeqeq
+  362:10  warning  Unnecessary 'else' after 'return'    no-else-return
+
+✖ 6 problems (0 errors, 6 warnings)
+  0 errors and 1 warning potentially fixable with the `--fix` option.
+
