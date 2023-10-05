@@ -171,3 +171,67 @@ function postalCodeValidator(code){
     }
     return false
 }
+
+//15. Write a function called countVowels that takes a string as an argument and returns the number of vowels in the string.
+
+function countVowels(string){
+    let count = 0
+    const vowels = 'aeiou'
+
+    for (let char of string.toLowerCase()){
+        if(vowels.includes(char)){
+            count++
+        }
+    }
+    return count
+}
+
+//16. Write a function called removeWhitespace that takes a string as an argument and returns the string with all white spaces 
+//removed.
+
+function removeWhitespace(str){
+    let newStr = str.replaceAll(' ', '')
+
+    return newStr
+}
+
+//17. Write a function called repeatString that takes a string and a number as arguments. The function should return a new 
+//string with the original string repeated the number of times specified.
+
+function repeatString(str, num){
+    let combined = str.repeat(num)
+
+    return combined
+}
+
+//18. Write a function called **`squareArray`** that takes an array of numbers and squares each element in the array. 
+//Return the modified array.
+
+function squareArray(numArr){
+    const squared = []
+    numArr.forEach((num) => {
+        squared.push(num * num)
+    })
+
+    return squared
+}
+
+//19. Write a function called toUpperCaseArray that takes an array of strings and returns a new array where all strings 
+//are converted to uppercase.
+
+function toUpperCaseArray(strArr){
+    return strArr.map(str => str.toUpperCase())
+}
+
+//20. Write a function called findFirstEven that takes an array of numbers and returns the first even number it finds.
+
+function findFirstEven(numArr){
+    return numArr.find(num => num % 2 === 0)
+}
+
+//21. Write a function called areAllPositive that takes an array of numbers and returns true if all elements are positive, 
+//otherwise false.
+
+function areAllPositive(numArr){
+    return numArr.every(num => num > 0)
+}
